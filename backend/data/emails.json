@@ -1,0 +1,8 @@
+[
+  {
+    "sender": "finance@company.com",
+    "subject": "Vendor Payment Approval",
+    "body": "TechPro invoice for $12,000 has been approved.",
+    "date": "2025-02-10"
+  }
+]

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+<title>Executive AI</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Inter;
+}
+
+body{
+background:#050b14;
+color:white;
+display:flex;
+height:100vh;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+width:230px;
+background:#020617;
+border-right:1px solid #1e293b;
+padding:20px;
+display:flex;
+flex-direction:column;
+}
+
+.logo{
+font-weight:600;
+font-size:18px;
+color:#6366f1;
+margin-bottom:30px;
+}
+
+.nav-btn{
+padding:10px;
+border-radius:8px;
+background:transparent;
+border:none;
+color:#94a3b8;
+cursor:pointer;
+text-align:left;
+margin-bottom:6px;
+}
+
+.nav-btn:hover{
+background:#1e293b;
+color:white;
+}
+
+/* MAIN */
+
+.main{
+flex:1;
+display:flex;
+flex-direction:column;
+}
+
+/* TOPBAR */
+
+.topbar{
+height:60px;
+border-bottom:1px solid #1e293b;
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:0 25px;
+}
+
+.search{
+background:#0f172a;
+border:none;
+padding:8px 12px;
+border-radius:6px;
+color:white;
+}
+
+/* CHAT AREA */
+
+.chat{
+flex:1;
+display:flex;
+overflow:hidden;
+}
+
+/* CHAT MESSAGES */
+
+.messages{
+flex:1;
+padding:30px;
+overflow:auto;
+}
+
+.message{
+margin-bottom:20px;
+}
+
+.user{
+text-align:right;
+}
+
+.bubble{
+display:inline-block;
+padding:12px 16px;
+border-radius:12px;
+max-width:60%;
+}
+
+.user .bubble{
+background:#6366f1;
+}
+
+.ai .bubble{
+background:#1e293b;
+}
+
+/* INPUT */
+
+.input-area{
+padding:20px;
+border-top:1px solid #1e293b;
+display:flex;
+gap:10px;
+}
+
+textarea{
+flex:1;
+resize:none;
+border:none;
+outline:none;
+padding:12px;
+border-radius:8px;
+background:#0f172a;
+color:white;
+}
+
+button{
+background:#6366f1;
+border:none;
+padding:12px 20px;
+border-radius:8px;
+cursor:pointer;
+color:white;
+}
+
+/* RIGHT PANEL */
+
+.reasoning{
+width:280px;
+border-left:1px solid #1e293b;
+background:#020617;
+padding:20px;
+}
+
+.reasoning h3{
+margin-bottom:20px;
+}
+
+.step{
+font-size:13px;
+color:#94a3b8;
+margin-bottom:10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+<div class="logo">
+Executive
+</div>
+
+<button class="nav-btn">AI Assistant</button>
+<button class="nav-btn">Memory Sources</button>
+<button class="nav-btn">Upload Files</button>
+<button class="nav-btn">Agent Logs</button>
+<button class="nav-btn">Settings</button>
+
+</div>
+
+<!-- MAIN -->
+
+<div class="main">
+
+<div class="topbar">
+
+<div>AI Assistant</div>
+
+<input class="search" placeholder="Search memory...">
+
+</div>
+
+<div class="chat">
+
+<div class="messages" id="messages">
+
+<div class="message ai">
+<div class="bubble">
+Hello! I'm your Personal Executive. Ask anything about your emails, notes, or documents.
+</div>
+</div>
+
+</div>
+
+<!-- REASONING PANEL -->
+
+<div class="reasoning">
+
+<h3>Agent Reasoning</h3>
+
+<div id="steps">
+
+<div class="step">Agent steps will appear here</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="input-area">
+
+<textarea id="input" placeholder="Ask about emails, documents, notes..."></textarea>
+
+<button onclick="sendMessage()">Send</button>
+
+</div>
+
+</div>
+
+<script>
+
+function addMessage(role,text){
+
+const container=document.getElementById("messages")
+
+const div=document.createElement("div")
+
+div.className="message "+role
+
+div.innerHTML=`<div class="bubble">${text}</div>`
+
+container.appendChild(div)
+
+container.scrollTop=container.scrollHeight
+
+}
+
+async function sendMessage(){
+
+const input=document.getElementById("input")
+
+const message=input.value.trim()
+
+if(!message)return
+
+addMessage("user",message)
+
+input.value=""
+
+try{
+
+const res=await fetch("http://127.0.0.1:8000/chat",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+message:message
+})
+
+})
+
+const data=await res.json()
+
+addMessage("ai",data.answer)
+
+document.getElementById("steps").innerHTML=
+
+"<div class='step'>Tool Used: "+data.tool_used+"</div>"
+
+}catch(e){
+
+addMessage("ai","Backend error")
+
+}
+
+}
+
+</script>
+
+</body>
+</html>

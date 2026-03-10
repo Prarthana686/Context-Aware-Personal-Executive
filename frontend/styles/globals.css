@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-navy: #0F172A;
+  --bg-slate: #1E293B;
+  --accent: #3B82F6;
+  --primary: #F8FAFC;
+  --secondary: #94A3B8;
+}
+
+.bg-navy { background-color: var(--bg-navy); }
+.bg-slate { background-color: var(--bg-slate); }
+.bg-panel { background-color: var(--bg-slate); }
+.text-accent { color: var(--accent); }
+.text-primary { color: var(--primary); }
+.text-secondary { color: var(--secondary); }
+
+body {
+  background-color: var(--bg-navy);
+  color: var(--primary);
+}
+
+input, textarea {
+  background-color: var(--bg-slate);
+  color: var(--primary);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  background: var(--bg-slate);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 8px;
+}
